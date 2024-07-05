@@ -12,10 +12,20 @@ commands = {
     "pwd": {
         "func": lambda args: os.getcwd(),
     },
+    "cd": {
+        "func": lambda args: cd_command(args), 
+    },
     "type": {
         "func": lambda args: type_command(args),
     }
 }
+
+def cd_command(args):
+    try:
+        os.chdir(args[0])
+    except FileNotFoundError:
+        return f"cd: {args[0]}: No such file or directory"
+    return None
 
 def type_command(args):
     paths = os.environ.get("PATH")
@@ -51,7 +61,8 @@ def main():
             return args[0] if len(args) > 0 else 0
         elif command in commands:
             result = commands[command]["func"](args)
-            sys.stdout.write(result + "\n")
+            if result:
+                sys.stdout.write(result + "\n")
             sys.stdout.flush()
         elif find_path(command):
             os.system(input_command)
