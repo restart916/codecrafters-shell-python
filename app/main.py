@@ -1,3 +1,4 @@
+import os
 import sys
 
 
@@ -14,11 +15,18 @@ commands = {
 }
 
 def type_command(args):
+    paths = os.environ.get("PATH")
+    paths = paths.split(":")
+
     command = args[0]
     if command in commands:
         return f"{command} is a shell builtin"
-    else:
-        return f"{command}: not found"
+    
+    for path in paths:
+        if os.path.exists(f"{path}/{command}"):
+            return f"{command} is {path}/{command}"
+    
+    return f"{command}: not found"
     
 
 def main():
