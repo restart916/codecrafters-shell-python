@@ -9,6 +9,9 @@ commands = {
     "exit": {
         "func": lambda args: args[0],
     },
+    "pwd": {
+        "func": lambda args: os.getcwd(),
+    },
     "type": {
         "func": lambda args: type_command(args),
     }
