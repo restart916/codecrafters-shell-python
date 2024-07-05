@@ -22,7 +22,10 @@ commands = {
 
 def cd_command(args):
     try:
-        os.chdir(args[0])
+        if args[0] == "~":
+            os.chdir(os.environ.get("HOME"))
+        else:
+            os.chdir(args[0])
     except FileNotFoundError:
         return f"cd: {args[0]}: No such file or directory"
     return None
