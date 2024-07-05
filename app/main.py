@@ -21,13 +21,18 @@ def type_command(args):
     command = args[0]
     if command in commands:
         return f"{command} is a shell builtin"
-    
+    elif find_path(command):
+        return f"{command} is {find_path(command)}/{command}"
+    return f"{command}: not found"
+
+def find_path(command):
+    paths = os.environ.get("PATH")
+    paths = paths.split(":")
+
     for path in paths:
         if os.path.exists(f"{path}/{command}"):
-            return f"{command} is {path}/{command}"
-    
-    return f"{command}: not found"
-    
+            return path
+    return None
 
 def main():
     # Wait for user input
@@ -40,11 +45,13 @@ def main():
         args = input_command.split(" ")[1:]
 
         if command == "exit":
-            return args[0]
+            return args[0] if len(args) > 0 else 0
         elif command in commands:
             result = commands[command]["func"](args)
             sys.stdout.write(result + "\n")
             sys.stdout.flush()
+        elif find_path(command):
+            os.system(input_command)
         else:
             sys.stdout.write(f'{command}: command not found\n')
             sys.stdout.flush()
